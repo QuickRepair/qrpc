@@ -21,10 +21,11 @@ class ResponseWriter;
 /// @brief: data to be transferred
 // Todo: buf should allocated by memory pool
 struct ByteBuf {
-	explicit ByteBuf(size_t bufSize = BUF_SIZE);
+	explicit ByteBuf(size_t bufSize = DEFAULT_BUF_SIZE);
 	~ByteBuf();
 
-	static constexpr size_t BUF_SIZE = 1024;
+	static constexpr size_t DEFAULT_BUF_SIZE = 1024;
+	// TODO: max size is limited
 	size_t size;
 	char *msg_buff;
 };
@@ -36,6 +37,7 @@ public:
 	std::unique_ptr<ByteBuf> serialize(ServiceTag serviceTage, Msg *msg);
 
 	void writeChar(const char data);
+	void writeString(const std::string &str);
 
 private:
 	std::unique_ptr<ByteBuf> allocaMem(size_t size);

@@ -5,62 +5,62 @@
 #include "MsgGen.h"
 #include "impl/ByteBuf.h"
 
-size_t EchoRequest::byteSize() const
+size_t EchoCharRequest::byteSize() const
 {
 	return sizeof(m_msg);
 }
 
-void EchoRequest::serialize(qrpc::ServiceSerialize *serializing)
+void EchoCharRequest::serialize(qrpc::ServiceSerialize *serializing)
 {
 	serializing->writeChar(m_msg);
 }
 
-void EchoRequest::deserialize(const char *buf)
+void EchoCharRequest::deserialize(const char *buf)
 {
 	m_msg = buf[0];
 }
 
-size_t EchoResponse::byteSize() const
+size_t EchoCharResponse::byteSize() const
 {
 	return sizeof(m_msg);
 }
 
-void EchoResponse::serialize(qrpc::ServiceSerialize *serializing)
+void EchoCharResponse::serialize(qrpc::ServiceSerialize *serializing)
 {
 	serializing->writeChar(getMsg());
 }
 
-void EchoResponse::deserialize(const char *buf)
+void EchoCharResponse::deserialize(const char *buf)
 {
 	m_msg = buf[0];
 }
 
 size_t EchoRequestSample::byteSize() const
 {
-	return sizeof(m_msg);
+	return m_msg.length() + 1;
 }
 
 void EchoRequestSample::serialize(qrpc::ServiceSerialize *serializing)
 {
-	serializing->writeChar(m_msg);
+	serializing->writeString(m_msg);
 }
 
 void EchoRequestSample::deserialize(const char *buf)
 {
-	m_msg = buf[0];
+	m_msg.append(buf);
 }
 
 size_t EchoResponseSample::byteSize() const
 {
-	return sizeof(m_msg);
+	return m_msg.length() + 1;
 }
 
 void EchoResponseSample::serialize(qrpc::ServiceSerialize *serializing)
 {
-	serializing->writeChar(getMsg());
+	serializing->writeString(getMsg());
 }
 
 void EchoResponseSample::deserialize(const char *buf)
 {
-	m_msg = buf[0];
+	m_msg.append(buf);
 }

@@ -16,7 +16,7 @@ void LinuxReaderImplement::recv(Handle handle, ByteBuf *buf)
 	iovec iov;
 
 	iov.iov_base = buf->msg_buff;
-	iov.iov_len = buf->BUF_SIZE;
+	iov.iov_len = buf->DEFAULT_BUF_SIZE;
 
 	msg.msg_name = NULL;
 	msg.msg_namelen = 0;
@@ -26,7 +26,10 @@ void LinuxReaderImplement::recv(Handle handle, ByteBuf *buf)
 	msg.msg_controllen = 0;
 	msg.msg_flags = 0;
 	recvmsg(handle, &msg, 0);*/
-	::recv(handle, buf->msg_buff, buf->BUF_SIZE, 0);
+	size_t len;
+	::recv(handle, &len, sizeof(ByteBuf::size), 0);
+	size_t read = len - sizeof(ByteBuf::size);
+	::recv(handle, buf->msg_buff, read, 0);
 }
 
 void LinuxWriterImplement::send(Handle handle, const ByteBuf *buf)
@@ -35,7 +38,7 @@ void LinuxWriterImplement::send(Handle handle, const ByteBuf *buf)
 	iovec iov;
 
 	iov.iov_base = buf->msg_buff;
-	iov.iov_len = buf->BUF_SIZE;
+	iov.iov_len = buf->DEFAULT_BUF_SIZE;
 
 	msg.msg_name = NULL;
 	msg.msg_namelen = 0;
@@ -45,6 +48,6 @@ void LinuxWriterImplement::send(Handle handle, const ByteBuf *buf)
 	msg.msg_controllen = 0;
 	msg.msg_flags = 0;
 	sendmsg(handle, &msg, 0);*/
-	::send(handle, buf->msg_buff, buf->BUF_SIZE, 0);
+	::send(handle, buf->msg_buff, buf->size, 0);
 }
 }

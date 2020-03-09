@@ -23,16 +23,23 @@ ByteBuf::~ByteBuf()
 
 std::unique_ptr<ByteBuf> ServiceSerialize::serialize(ServiceTag serviceTag, Msg *msg)
 {
-	auto buf = allocaMem(msg->byteSize() + 1);
-	buf->msg_buff[m_cursor++] = serviceTag;
+	size_t buf_size = msg->byteSize() + sizeof(serviceTag) + sizeof(ByteBuf::size);
+	auto buf = allocaMem(buf_size);
+
+	// TODO: big ending/little ending
+	buf->msg_buff[m_cursor] = buf_size;
+	m_cursor += sizeof(ByteBuf::size);
+	buf->msg_buff[m_cursor] = serviceTag;
+	m_cursor += sizeof(serviceTag);
+
 	msg->serialize(this);
+
 	return std::move(buf);
 }
 
 std::unique_ptr<ByteBuf> ServiceSerialize::allocaMem(size_t size)
 {
-	// TODO: make size changeable
-	auto byteBuf = make_unique<ByteBuf>(/*size + 1*/);
+	auto byteBuf = make_unique<ByteBuf>(size);
 	_buf = byteBuf.get();
 	m_cursor = 0;
 	m_size = size;
@@ -44,6 +51,12 @@ void ServiceSerialize::writeChar(const char data)
 	_buf->msg_buff[m_cursor++] = data;
 }
 
+void ServiceSerialize::writeString(const std::string &str)
+{
+	for (auto &s : str)
+		_buf->msg_buff[m_cursor++] = s;
+}
+
 ByteBufDeserialize::ByteBufDeserialize(qrpc::MsgRepository *repository)
 	: _repository{repository}
 {}
@@ -53,14 +66,14 @@ std::optional<ByteBufDeserialize::ServiceOut> ByteBufDeserialize::deserializeReq
 	ByteBufDeserialize::ServiceOut out;
 	out.serviceTag = recvBuf->msg_buff[0];
 	out.request = _repository->create(_repository->getRequestTag(out.serviceTag));
-	out.request->deserialize(recvBuf->msg_buff + 1);
+	out.request->deserialize(recvBuf->msg_buff + sizeof(ServiceTag));
 	out.response = _repository->create(_repository->getResponseTag(out.serviceTag));
 	return std::move(out);
 }
 
 void ByteBufDeserialize::deserializeResponse(const ByteBuf *recvBuf, Msg *response)
 {
-	response->deserialize(recvBuf->msg_buff + 1);
+	response->deserialize(recvBuf->msg_buff + sizeof(ServiceTag));
 }
 
 HandleRequest::HandleRequest(Service *service, MsgRepository *repository)

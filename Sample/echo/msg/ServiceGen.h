@@ -10,8 +10,8 @@
 #include "Client/Connection.h"
 #include "MsgGen.h"
 
-class EchoRequest;
-class EchoResponse;
+class EchoCharRequest;
+class EchoCharResponse;
 
 class Service : public qrpc::Service {
 public:
@@ -19,9 +19,9 @@ public:
 	~Service() override = default;
 
 	static constexpr qrpc::ServiceTag EchoTag = 1;
-	static constexpr qrpc::ServiceTag EchoRequestTag = EchoRequest::tag;
-	static constexpr qrpc::ServiceTag EchoResponseTag = EchoResponse::tag;
-	void echo(EchoRequest *request, EchoResponse *response);
+	static constexpr qrpc::ServiceTag EchoRequestTag = EchoCharRequest::tag;
+	static constexpr qrpc::ServiceTag EchoResponseTag = EchoCharResponse::tag;
+	void echo(EchoCharRequest *request, EchoCharResponse *response);
 
 	static constexpr qrpc::ServiceTag EchoSampleTag = 2;
 	static constexpr qrpc::ServiceTag EchoResponseSampleTag = EchoResponseSample::tag;
@@ -34,7 +34,7 @@ public:
 	Stub(std::unique_ptr<qrpc::Connection> &&connection);
 
 	static constexpr qrpc::ServiceTag EchoTag = 1;
-	void echo(EchoRequest *request, EchoResponse *response);
+	void echo(EchoCharRequest *request, EchoCharResponse *response);
 
 	static constexpr qrpc::ServiceTag EchoSampleTag = 2;
 	void echoSample(EchoRequestSample *request, EchoResponseSample *response);

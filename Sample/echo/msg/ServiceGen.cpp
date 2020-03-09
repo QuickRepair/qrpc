@@ -13,7 +13,7 @@ using std::make_unique;
 Service::Service()
 {
 	registerService(
-			std::move(make_unique<qrpc::RpcMethodHandler<Service, EchoRequest, EchoResponse>>(std::mem_fn(&Service::echo), this)),
+			std::move(make_unique<qrpc::RpcMethodHandler<Service, EchoCharRequest, EchoCharResponse>>(std::mem_fn(&Service::echo), this)),
 			EchoTag
 			);
 	registerService(
@@ -22,7 +22,7 @@ Service::Service()
 	);
 }
 
-void Service::echo(EchoRequest *request, EchoResponse *response)
+void Service::echo(EchoCharRequest *request, EchoCharResponse *response)
 {
 	response->setMsg(request->getMsg());
 }
@@ -36,7 +36,7 @@ Stub::Stub(std::unique_ptr<qrpc::Connection> &&connection)
 	: m_connection{std::move(connection)}, m_callMethod{make_unique<qrpc::BlockingCall>(m_connection.get())}
 {}
 
-void Stub::echo(EchoRequest *request, EchoResponse *response)
+void Stub::echo(EchoCharRequest *request, EchoCharResponse *response)
 {
 	m_callMethod->call(EchoTag, request, response);
 }

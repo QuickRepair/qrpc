@@ -7,7 +7,7 @@
 
 #include "CodeGen/Msg.h"
 
-class EchoRequest : public qrpc::Msg {
+class EchoCharRequest : public qrpc::Msg {
 public:
 	static constexpr qrpc::MsgTag tag = 0;
 
@@ -18,12 +18,12 @@ public:
 	void serialize(qrpc::ServiceSerialize *serializing) override;
 	void deserialize(const char *buf) override;
 
-	static std::unique_ptr<EchoRequest> create() { return std::make_unique<EchoRequest>(); }
+	static std::unique_ptr<EchoCharRequest> create() { return std::make_unique<EchoCharRequest>(); }
 private:
 	char m_msg;
 };
 
-class EchoResponse : public qrpc::Msg {
+class EchoCharResponse : public qrpc::Msg {
 public:
 	static constexpr qrpc::MsgTag tag = 1;
 
@@ -34,7 +34,7 @@ public:
 	void serialize(qrpc::ServiceSerialize *serializing) override;
 	void deserialize(const char *buf) override;
 
-	static std::unique_ptr<EchoResponse> create() { return std::make_unique<EchoResponse>(); }
+	static std::unique_ptr<EchoCharResponse> create() { return std::make_unique<EchoCharResponse>(); }
 private:
 	char m_msg;
 };
@@ -43,8 +43,8 @@ class EchoRequestSample : public qrpc::Msg {
 public:
 	static constexpr qrpc::MsgTag tag = 2;
 
-	void setMsg(char msg) { m_msg = msg; }
-	char getMsg() const { return m_msg; }
+	void setMsg(std::string msg) { m_msg = msg; }
+	const std::string &getMsg() const { return m_msg; }
 
 	size_t byteSize() const override;
 	void serialize(qrpc::ServiceSerialize *serializing) override;
@@ -52,15 +52,15 @@ public:
 
 	static std::unique_ptr<EchoRequestSample> create() { return std::make_unique<EchoRequestSample>(); }
 private:
-	char m_msg;
+	std::string m_msg;
 };
 
 class EchoResponseSample : public qrpc::Msg {
 public:
 	static constexpr qrpc::MsgTag tag = 3;
 
-	void setMsg(char msg) { m_msg = msg; }
-	char getMsg() const { return m_msg; }
+	void setMsg(std::string msg) { m_msg = msg; }
+	const std::string &getMsg() const { return m_msg; }
 
 	size_t byteSize() const override;
 	void serialize(qrpc::ServiceSerialize *serializing) override;
@@ -68,7 +68,7 @@ public:
 
 	static std::unique_ptr<EchoResponseSample> create() { return std::make_unique<EchoResponseSample>(); }
 private:
-	char m_msg;
+	std::string m_msg;
 };
 
 #endif //QRPC_MSG_H

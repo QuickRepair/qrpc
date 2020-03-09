@@ -11,25 +11,25 @@ int main()
 {
 	try
 	{
-		Stub stub(make_unique<qrpc::Connection>("127.0.0.1", 67431));
+		Stub stub(make_unique<qrpc::Connection>("127.0.0.1", 6743));
 		std::cout << "client start" << std::endl;
 
 		for (char i = 0; i < 10; ++i)
 		{
-			EchoRequest request;
+			EchoCharRequest request;
 			request.setMsg('0' + i);
-			EchoResponse response;
+			EchoCharResponse response;
 			stub.echo(&request, &response);
 			std::cout << response.getMsg() << std::endl;
 		}
 
-		for (char i = 'a'; i < 'z'; ++i)
+		for (char i = 0; i < 10; ++i)
 		{
-			EchoRequestSample request1;
-			request1.setMsg(i);
-			EchoResponseSample response1;
-			stub.echoSample(&request1, &response1);
-			std::cout << response1.getMsg() << std::endl;
+			EchoRequestSample request;
+			request.setMsg("echo" + std::to_string(i));
+			EchoResponseSample response;
+			stub.echoSample(&request, &response);
+			std::cout << response.getMsg() << std::endl;
 		}
 	}
 	catch (std::runtime_error &e)
