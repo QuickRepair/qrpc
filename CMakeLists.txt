@@ -4,5 +4,9 @@ set(CMAKE_CXX_STANDARD 17)
 
 project(qrpc)
 
-add_subdirectory(Sample/echo/Server)
-add_subdirectory(Sample/echo/Client)
+include_directories(
+    ${CMAKE_HOME_DIRECTORY}/include
+)
+
+add_subdirectory(example/echo/server)
+add_subdirectory(example/echo/client)
