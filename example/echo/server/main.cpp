@@ -32,6 +32,5 @@ int main()
 	server.registerMsgRepository(std::move(msgRepository));
 
 	std::cout << "server start" << std::endl;
-	while (true)
-		server.waitAndHandleMsg();
+	server.waitAndHandleMsg();
 }

@@ -24,7 +24,7 @@ public:
 
 private:
 	int epfd;
-	unsigned eventNums;
+	int eventNums;
 	std::vector<epoll_event> events;
 
 	struct HandleProperty {

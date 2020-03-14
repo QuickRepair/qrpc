@@ -13,7 +13,8 @@ using std::make_unique;
 namespace qrpc {
 Reactor::Reactor()
 {
-	m_reactorImpl = make_unique<EpollReactorImplementation>();
+	m_mainReactorImpl = make_unique<EpollReactorImplementation>();
+	m_subReactorImpl = make_unique<EpollReactorImplementation>();
 }
 
 EpollReactorImplementation::EpollReactorImplementation() : eventNums{0}
@@ -95,7 +96,7 @@ void EpollReactorImplementation::removeHandler(EventHandler *eh)
 
 void EpollReactorImplementation::handleEvents()
 {
-	int nums = epoll_wait(epfd, &events[0], eventNums, -1);
+	int nums = epoll_wait(epfd, &events[0], eventNums, 0);
 	for (int index = 0; index < nums; ++index)
 	{
 		uint32_t event = events[index].events;

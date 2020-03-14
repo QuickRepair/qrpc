@@ -42,7 +42,7 @@ ListeningHandler::ListeningHandler(std::string addr, unsigned port, std::unique_
 ListeningHandler::~ListeningHandler()
 {
 	shutdown(m_handle, SHUT_RDWR);
-	Reactor::instance().removeHandler(this);
+	Reactor::instance().mainReactor()->removeHandler(this);
 }
 
 void ListeningHandler::handleEvent(EventType et)
@@ -50,6 +50,7 @@ void ListeningHandler::handleEvent(EventType et)
 	Handle newClient;
 	unique_ptr<EventHandler> handler;
 	EventHandler *ptr;
+	const std::unique_ptr<ReactorImplementation> &sub = Reactor::instance().subReactor();
 	switch (et)
 	{
 		case READ_EVENT:
@@ -57,8 +58,8 @@ void ListeningHandler::handleEvent(EventType et)
 				throw runtime_error("accept: " + std::string(strerror(errno)));
 			handler = make_unique<SocketHandler>(newClient, m_service.get(), m_repository.get());
 			ptr = handler.get();
-			Reactor::instance().registerHandler(std::move(handler), DISCONNECT_EVENT);
-			Reactor::instance().updateHandler(ptr, READ_EVENT);
+			sub->registerHandler(std::move(handler), DISCONNECT_EVENT);
+			sub->updateHandler(ptr, READ_EVENT);
 			break;
 		default:break;
 	}

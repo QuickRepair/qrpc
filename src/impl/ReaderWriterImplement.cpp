@@ -27,7 +27,8 @@ std::unique_ptr<ByteBuf> LinuxReaderImplement::recv(Handle handle)
 	msg.msg_flags = 0;
 	recvmsg(handle, &msg, 0);*/
 	size_t len;
-	::recv(handle, &len, sizeof(ByteBuf::size), 0);
+	if (::recv(handle, &len, sizeof(ByteBuf::size), 0) <= 0)
+		return nullptr;
 
 	size_t read = len - sizeof(ByteBuf::size);
 	unique_ptr<ByteBuf> buf = make_unique<ByteBuf>(read + 1);

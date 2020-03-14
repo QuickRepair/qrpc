@@ -14,7 +14,7 @@ Server::Server(std::string ip, unsigned port)
 {
 	auto listeningHandler = make_unique<ListeningHandler>(ip, port);
 	listener = listeningHandler.get();
-	Reactor::instance().registerHandler(std::move(listeningHandler), READ_EVENT);
+	Reactor::instance().mainReactor()->registerHandler(std::move(listeningHandler), READ_EVENT);
 }
 
 void Server::registerService(std::unique_ptr<Service> &&service)
@@ -24,7 +24,7 @@ void Server::registerService(std::unique_ptr<Service> &&service)
 
 void Server::waitAndHandleMsg()
 {
-	Reactor::instance().handleEvents();
+	Reactor::instance().run();
 }
 
 void Server::registerMsgRepository(std::unique_ptr<MsgRepository> &&repository)

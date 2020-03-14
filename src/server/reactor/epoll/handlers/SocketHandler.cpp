@@ -17,7 +17,7 @@ SocketHandler::SocketHandler(Handle handle, Service *service, MsgRepository *msg
 SocketHandler::~SocketHandler()
 {
 	shutdown(m_handle, SHUT_RDWR);
-	Reactor::instance().removeHandler(this);
+	/*Reactor::instance().subReactor()->removeHandler(this);*/
 }
 
 void SocketHandler::handleEvent(EventType et)
@@ -44,7 +44,7 @@ Handle SocketHandler::getHandle() const
 void SocketHandler::sendMsg()
 {
 	sendWriter->send(m_handle, sendBuf.get());
-	Reactor::instance().updateHandler(this, WRITE_EVENT);
+	Reactor::instance().subReactor()->updateHandler(this, WRITE_EVENT);
 }
 
 void SocketHandler::recvMsg()
@@ -53,14 +53,13 @@ void SocketHandler::recvMsg()
 	if (auto response = handleRequest.process(std::move(recvBuf)))
 	{
 		sendBuf = std::move(response);
-		Reactor::instance().updateHandler(this, WRITE_EVENT);
+		Reactor::instance().subReactor()->updateHandler(this, WRITE_EVENT);
 	}
 }
 
 void SocketHandler::disconnected()
 {
 	std::cout << "disconnect" << std::endl;
-	shutdown(m_handle, SHUT_RDWR);
-	Reactor::instance().removeHandler(this);
+	Reactor::instance().subReactor()->removeHandler(this);
 }
 }

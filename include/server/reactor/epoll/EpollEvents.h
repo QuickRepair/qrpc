@@ -7,7 +7,7 @@ extern "C" {
 
 namespace qrpc {
 /// @brief epoll events type
-enum {
+enum:unsigned {
 	WRITE_EVENT = EPOLLOUT,
 	READ_EVENT = EPOLLIN,
 	ERR_EVENT = EPOLLERR,
