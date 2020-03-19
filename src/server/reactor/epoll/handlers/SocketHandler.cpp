@@ -43,18 +43,14 @@ Handle SocketHandler::getHandle() const
 
 void SocketHandler::sendMsg()
 {
-	sendWriter->send(m_handle, sendBuf.get());
+	sendWriter->send(m_handle, response.get().get());
 	Reactor::instance().subReactor()->updateHandler(this, WRITE_EVENT);
 }
 
 void SocketHandler::recvMsg()
 {
-	recvBuf = std::move(recvReader->recv(m_handle));
-	if (auto response = handleRequest.process(std::move(recvBuf)))
-	{
-		sendBuf = std::move(response);
-		Reactor::instance().subReactor()->updateHandler(this, WRITE_EVENT);
-	}
+	response = ThreadPool::getInstance().submit(&HandleRequest::process, &handleRequest, recvReader->recv(m_handle));
+	Reactor::instance().subReactor()->updateHandler(this, WRITE_EVENT);
 }
 
 void SocketHandler::disconnected()

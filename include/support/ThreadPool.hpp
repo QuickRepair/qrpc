@@ -19,6 +19,7 @@ public:
 	{
 		doneConstruct = true;
 		done = true;
+		joiner = nullptr;
 	}
 
 	static ThreadPool &getInstance() {
@@ -27,7 +28,7 @@ public:
 	}
 
 	template<typename Runnable, typename ... Args>
-	std::future<typename std::result_of<Runnable(Args...)>::type> submit(Runnable &&runnable, Args ... args)
+	std::future<typename std::result_of<Runnable(Args...)>::type> submit(Runnable runnable, Args ... args)
 	{
 		typedef typename std::result_of<Runnable(Args...)>::type resultType;
 		std::packaged_task<resultType(Args...)> task(runnable);
@@ -37,12 +38,12 @@ public:
 			threadWorkQueue->push(std::move(wrapper));
 		else
 			poolWorkQueue.push(std::move(wrapper));
-		return res;
+		return std::move(res);
 	}
 
 private:
 	ThreadPool()
-			: done{false}, joiner{threads}, doneConstruct{false}
+			: done{false}, joiner{std::make_unique<ThreadJoiner>(threads)}, doneConstruct{false}
 	{
 		try
 		{
@@ -103,7 +104,7 @@ private:
 
 	std::atomic_bool done;
 	std::atomic_bool doneConstruct;
-	ThreadJoiner joiner;
+	std::unique_ptr<ThreadJoiner> joiner;
 	ThreadSafeQueue<TaskType> poolWorkQueue;
 	std::vector<std::unique_ptr<WorkStealingQueue>> localWorkQueue;
 	std::vector<std::thread> threads;

@@ -6,11 +6,11 @@
 #include "impl/ByteBuf.h"
 #include <sys/socket.h>
 
-using std::make_unique;			using std::unique_ptr;
+using std::make_shared;			using std::shared_ptr;
 
 namespace qrpc {
 
-std::unique_ptr<ByteBuf> LinuxReaderImplement::recv(Handle handle)
+std::shared_ptr<ByteBuf> LinuxReaderImplement::recv(Handle handle)
 {
 	/*msghdr msg;
 	iovec iov;
@@ -31,9 +31,9 @@ std::unique_ptr<ByteBuf> LinuxReaderImplement::recv(Handle handle)
 		return nullptr;
 
 	size_t read = len - sizeof(ByteBuf::size);
-	unique_ptr<ByteBuf> buf = make_unique<ByteBuf>(read + 1);
+	shared_ptr<ByteBuf> buf = make_shared<ByteBuf>(read + 1);
 	::recv(handle, buf->msg_buff, read, 0);
-	return std::move(buf);
+	return buf;
 }
 
 void LinuxWriterImplement::send(Handle handle, const ByteBuf *buf)

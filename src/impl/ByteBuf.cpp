@@ -99,15 +99,15 @@ HandleRequest::HandleRequest(Service *service, MsgRepository *repository)
 	: _service{service}, _repository{repository}
 {}
 
-std::unique_ptr<ByteBuf> HandleRequest::process(std::unique_ptr<ByteBuf> &&buf)
+std::shared_ptr<ByteBuf> HandleRequest::process(std::shared_ptr<ByteBuf> buf)
 {
-	DeserializeStream ds(std::move(buf));
+	DeserializeStream ds(buf);
 	optional<MsgPackage::Request> out = MsgPackage::getRequest(ds, _repository);
 	if (!out.has_value())
 		return nullptr;
 	const MethodHandler *handler = _service->getHandler(out->serviceTag);
 	handler->run(out->request.get(), out->response.get());
 	SerializeStream ss = std::move(MsgPackage::build(out->serviceTag, out->response.get()));
-	return std::move(ss.release());
+	return ss.get();
 }
 }

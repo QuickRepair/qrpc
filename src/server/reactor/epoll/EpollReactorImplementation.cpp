@@ -104,10 +104,10 @@ void EpollReactorImplementation::handleEvents()
 		HandleProperty handleProperty(fd);
 		if (event & EPOLLRDHUP)
 			m_handles[handleProperty]->handleEvent(DISCONNECT_EVENT);
-		else if (event & EPOLLIN)
-			m_handles[handleProperty]->handleEvent(READ_EVENT);
 		else if (event & EPOLLOUT)
 			m_handles[handleProperty]->handleEvent(WRITE_EVENT);
+		else if (event & EPOLLIN)
+			m_handles[handleProperty]->handleEvent(READ_EVENT);
 		else if (event & EPOLLERR)
 			m_handles[handleProperty]->handleEvent(ERR_EVENT);
 	}

@@ -11,7 +11,7 @@ namespace qrpc {
 class LinuxReaderImplement : public RequestReader {
 public:
 	~LinuxReaderImplement() override = default;
-	std::unique_ptr<ByteBuf> recv(Handle handle) override;
+	std::shared_ptr<ByteBuf> recv(Handle handle) override;
 };
 
 class LinuxWriterImplement : public ResponseWriter {

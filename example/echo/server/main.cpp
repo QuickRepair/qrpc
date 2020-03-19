@@ -2,22 +2,11 @@
 #include "example/echo/msg/ServiceGen.h"
 #include "example/echo/msg/MsgGen.h"
 #include <iostream>
-#include <stdexcept>
-#include <code_gen/Serializable.h>
 
 using std::make_unique;			using std::runtime_error;
 
 int main()
 {
-	/*std::string a{"abc"};
-	qrpc::StringSerialize as(a);
-	qrpc::SerializeStream ss(10);
-	as.serialize(ss);
-	qrpc::DeserializeStream ds(std::unique_ptr<qrpc::ByteBuf>(ss.get()));
-	std::string b;
-	qrpc::StringSerialize bs(b);
-	bs.deserialize(ds);
-	return 0;*/
 	qrpc::Server server("0.0.0.0", 6743);
 	server.registerService(make_unique<Service>());
 	auto msgRepository = make_unique<qrpc::MsgRepository>();

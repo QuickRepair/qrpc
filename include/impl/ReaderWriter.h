@@ -17,7 +17,7 @@ class RequestReader {
 public:
 	virtual ~RequestReader() = default;
 
-	virtual std::unique_ptr<ByteBuf> recv(Handle handle) = 0;
+	virtual std::shared_ptr<ByteBuf> recv(Handle handle) = 0;
 };
 
 /// @brief Writer

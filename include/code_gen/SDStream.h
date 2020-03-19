@@ -28,11 +28,10 @@ public:
 
 	explicit SerializeStream(size_t msgSize);
 	SerializeStream(SerializeStream &&other) noexcept;
-	ByteBuf *get();
-	std::unique_ptr<ByteBuf> release();
+	std::shared_ptr<ByteBuf> get();
 
 private:
-	std::unique_ptr<ByteBuf> buf;
+	std::shared_ptr<ByteBuf> buf;
 	size_t cursor;
 };
 
@@ -46,11 +45,11 @@ public:
 	DeserializeStream &operator=(DeserializeStream &) = delete;
 	DeserializeStream &operator=(const DeserializeStream &) = delete;
 
-	explicit DeserializeStream(std::unique_ptr<ByteBuf> &&byteBuf);
-	ByteBuf *get() const;
+	explicit DeserializeStream(std::shared_ptr<ByteBuf> byteBuf);
+	std::shared_ptr<ByteBuf> get() const;
 
 private:
-	std::unique_ptr<ByteBuf> buf;
+	std::shared_ptr<ByteBuf> buf;
 	size_t cursor;
 };
 

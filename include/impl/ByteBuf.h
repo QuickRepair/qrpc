@@ -77,7 +77,7 @@ class HandleRequest {
 public:
 	HandleRequest(Service *service, MsgRepository *repository);
 	/// @brief Return response
-	std::unique_ptr<ByteBuf> process(std::unique_ptr<ByteBuf> &&buf);
+	std::shared_ptr<ByteBuf> process(std::shared_ptr<ByteBuf> buf);
 
 private:
 	Service *_service;

@@ -18,23 +18,18 @@ SerializeStream::SerializeStream(SerializeStream &&other) noexcept
 	: buf{std::move(other.buf)}, cursor{other.cursor}
 {}
 
-ByteBuf * SerializeStream::get()
+std::shared_ptr<ByteBuf> SerializeStream::get()
 {
-	return buf.get();
+	return buf;
 }
 
-std::unique_ptr<ByteBuf> SerializeStream::release()
-{
-	return std::move(buf);
-}
-
-DeserializeStream::DeserializeStream(std::unique_ptr<ByteBuf> &&byteBuf)
-		: buf{std::move(byteBuf)}, cursor{0}
+DeserializeStream::DeserializeStream(std::shared_ptr<ByteBuf> byteBuf)
+		: buf{byteBuf}, cursor{0}
 {}
 
-ByteBuf * DeserializeStream::get() const
+std::shared_ptr<ByteBuf>  DeserializeStream::get() const
 {
-	return buf.get();
+	return buf;
 }
 
 SerializeStream &operator<<(SerializeStream &stream, std::shared_ptr<ByteBuf> buf)

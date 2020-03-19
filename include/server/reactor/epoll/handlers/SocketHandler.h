@@ -4,6 +4,7 @@
 #include "include/server/reactor/EventHandler.h"
 #include "include/impl/ReaderWriterImplement.h"
 #include "include/impl/ByteBuf.h"
+#include <future>
 
 namespace qrpc {
 
@@ -26,9 +27,10 @@ private:
 
 	HandleRequest handleRequest;
 	std::unique_ptr<RequestReader> recvReader;
-	std::unique_ptr<ByteBuf> recvBuf;
+//	std::shared_ptr<ByteBuf> recvBuf;
 	std::unique_ptr<ResponseWriter> sendWriter;
-	std::unique_ptr<ByteBuf> sendBuf;
+//	std::shared_ptr<ByteBuf> sendBuf;
+	std::future<std::shared_ptr<ByteBuf>> response;
 	Handle m_handle;
 };
 }

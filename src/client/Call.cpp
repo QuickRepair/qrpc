@@ -22,7 +22,7 @@ void BlockingCall::call(qrpc::ServiceTag tag, qrpc::Msg *request, qrpc::Msg *res
 	// send
 	SerializeStream ss = MsgPackage::build(tag, request);
 	Handle handle = _connection->getHandle();
-	writer->send(handle, ss.get());
+	writer->send(handle, ss.get().get());
 
 	// recv
 	DeserializeStream ds(std::move(reader->recv(handle)));

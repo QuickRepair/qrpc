@@ -18,11 +18,74 @@ namespace qrpc {
 class RunnableWrapper {
 public:
 	template<typename Runnable, typename ... Args>
+	explicit RunnableWrapper(Runnable runnable, Args ... args)
+			: m_runnable{std::make_unique<ImplType<Runnable, Args...>>(std::move(runnable), args...)}
+	{}
+
+	RunnableWrapper(RunnableWrapper &&other) noexcept
+		: m_runnable{std::move(other.m_runnable)}
+	{}
+
+	RunnableWrapper(const RunnableWrapper &&other) = delete;
+	RunnableWrapper(RunnableWrapper &) = delete;
+	RunnableWrapper() = default;
+
+	void operator()()
+	{
+		m_runnable->call();
+	}
+
+	RunnableWrapper &operator=(RunnableWrapper &&runnableWrapper) noexcept
+	{
+		m_runnable = std::move(runnableWrapper.m_runnable);
+		return *this;
+	}
+
+	RunnableWrapper &operator=(RunnableWrapper &) = delete;
+
+public:
+	struct ImplBase {
+		virtual void call() = 0;
+
+		virtual ~ImplBase() = default;
+	};
+
+	template<typename Runnable, typename ... Args>
+	struct ImplType : ImplBase {
+		std::function<void()> r;
+		Runnable _runnable;
+
+		explicit ImplType(Runnable runnable, Args ... args)
+				: _runnable{std::move(runnable)}, r{std::bind(&ImplType<Runnable, Args...>::runRunnable, this, args...)}
+		{}
+
+		ImplType(ImplType &&other) noexcept
+			: _runnable{std::move(other._runnable)}, r{std::move(other.r)}
+		{}
+
+		ImplType(ImplType &) = delete;
+		ImplType(const ImplType &) = delete;
+		ImplType &operator=(ImplType &) = delete;
+
+		inline void call() override
+		{ r(); }
+
+		void runRunnable(Args ... args)
+		{
+			_runnable(args...);
+		}
+	};
+
+	std::unique_ptr<ImplBase> m_runnable;
+};
+
+/*class RunnableWrapper {
+public:
+	template<typename Runnable, typename ... Args>
 	explicit RunnableWrapper(Runnable &&runnable, Args ... args)
 			: m_runnable(std::make_unique<ImplType<Runnable, Args...>>(std::forward<Runnable>(runnable), args...))
 	{}
-	RunnableWrapper(RunnableWrapper &&other) noexcept : m_runnable{std::move(other.m_runnable)} {}
-	RunnableWrapper(const RunnableWrapper &&other) = delete;
+	RunnableWrapper(RunnableWrapper &&other) : m_runnable{std::move(other.m_runnable)} {}
 	RunnableWrapper(RunnableWrapper &) = delete;
 	RunnableWrapper() = default;
 
@@ -50,7 +113,7 @@ public:
 		std::function<void()> r;
 		Runnable runnableInstance;
 
-		explicit ImplType(Runnable &&runnable, Args ... args)
+		ImplType(Runnable &&runnable, Args ... args)
 				: runnableInstance{std::move(runnable)}, r{std::bind(&ImplType<Runnable, Args...>::runRunnable, this, args...)}
 		{
 			;
@@ -69,7 +132,7 @@ public:
 	};
 
 	std::unique_ptr<ImplBase> m_runnable;
-};
+};*/
 
 template<typename T>
 class ThreadSafeQueue {
@@ -179,7 +242,8 @@ public:
 			: _threads{threads}
 	{}
 
-	~ThreadJoiner() {
+	~ThreadJoiner()
+	{
 		for (auto &t : _threads)
 		{
 			if (t.joinable())
