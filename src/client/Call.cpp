@@ -2,12 +2,12 @@
 // Created by gaojian on 2020/1/2.
 //
 
-#include "code_gen/MsgPackage.h"
-#include "code_gen/SDStream.h"
+#include "impl/MsgPackage.h"
+#include "impl/SDStream.h"
 #include "client/Call.h"
 #include "client/Connection.h"
-#include "code_gen/Msg.h"
-#include "impl/ReaderWriterImplement.h"
+#include "impl/Msg.h"
+#include "net/ReaderWriterImplement.h"
 
 using std::make_unique;
 

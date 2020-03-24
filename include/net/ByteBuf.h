@@ -8,7 +8,7 @@
 #include <memory>
 #include <string>
 #include <optional>
-#include "include/code_gen/Service.h"
+#include "impl/Service.h"
 
 namespace qrpc {
 

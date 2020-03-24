@@ -10,3 +10,4 @@ include_directories(
 
 add_subdirectory(example/echo/server)
 add_subdirectory(example/echo/client)
+include(cmake/qgen.cmake)

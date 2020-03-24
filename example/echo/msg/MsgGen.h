@@ -5,7 +5,7 @@
 #ifndef MSG_H
 #define MSG_H
 
-#include "include/code_gen/Msg.h"
+#include "impl/Msg.h"
 
 class EchoCharRequest : public qrpc::Msg {
 public:

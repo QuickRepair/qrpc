@@ -1,5 +1,5 @@
-#include "code_gen/Msg.h"
-#include "code_gen/MethodWrapper.h"
+#include "impl/Msg.h"
+#include "impl/MethodWrapper.h"
 
 using std::make_unique;			using std::make_tuple;
 

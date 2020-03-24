@@ -3,8 +3,8 @@
 //
 
 #include "MsgGen.h"
-#include "impl/ByteBuf.h"
-#include "code_gen/Serializable.h"
+#include "net/ByteBuf.h"
+#include "impl/Serializable.h"
 
 size_t EchoCharRequest::byteSize()
 {

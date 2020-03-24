@@ -14,6 +14,7 @@ namespace qrpc {
 class SerializeStream;
 class DeserializeStream;
 
+/// @brief Serializable interface
 template<typename BaseType>
 class Serializable {
 public:

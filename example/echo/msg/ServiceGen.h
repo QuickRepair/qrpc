@@ -5,9 +5,9 @@
 #ifndef SERVICE_H
 #define SERVICE_H
 
-#include "include/code_gen/Service.h"
-#include "include/client/Call.h"
-#include "include/client/Connection.h"
+#include "impl/Service.h"
+#include "client/Call.h"
+#include "client/Connection.h"
 #include "MsgGen.h"
 
 class EchoCharRequest;
@@ -19,10 +19,10 @@ public:
 	~Service() override = default;
 
 	static constexpr qrpc::ServiceTag EchoTag = 1;
-	void echo(EchoCharRequest *request, EchoCharResponse *response);
+	virtual void echo(EchoCharRequest *request, EchoCharResponse *response) = 0;
 
 	static constexpr qrpc::ServiceTag EchoSampleTag = 2;
-	void echoSample(EchoRequestSample *request, EchoResponseSample *response);
+	virtual void echoSample(EchoRequestSample *request, EchoResponseSample *response) = 0;
 };
 
 class Stub {

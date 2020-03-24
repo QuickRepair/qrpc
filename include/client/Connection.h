@@ -5,7 +5,7 @@
 #ifndef QRPC_CONNECTION_H
 #define QRPC_CONNECTION_H
 
-#include "include/impl/Handle.h"
+#include "net/Handle.h"
 #include <string>
 
 namespace qrpc {

@@ -2,8 +2,8 @@
 // Created by gaojian on 2020/3/11.
 //
 
-#include <code_gen/MsgPackage.h>
-#include "code_gen/SDStream.h"
+#include "impl/MsgPackage.h"
+#include "impl/SDStream.h"
 
 using std::make_unique;
 

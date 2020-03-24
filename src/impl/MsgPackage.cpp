@@ -2,10 +2,9 @@
 // Created by gaojian on 2020/3/13.
 //
 
-#include "code_gen/Serializable.h"
-#include "code_gen/MsgPackage.h"
-#include "code_gen/SDStream.h"
-#include "code_gen/Msg.h"
+#include "impl/MsgPackage.h"
+#include "impl/SDStream.h"
+#include "impl/Msg.h"
 
 namespace qrpc {
 SerializeStream MsgPackage::build(ServiceTag serviceTag, Msg *msg)

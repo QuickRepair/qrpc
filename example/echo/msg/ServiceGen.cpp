@@ -4,8 +4,8 @@
 
 #include "ServiceGen.h"
 #include "MsgGen.h"
-#include "include/code_gen/MethodWrapper.h"
-#include "include/client/Call.h"
+#include "impl/MethodWrapper.h"
+#include "client/Call.h"
 #include <memory>
 
 using std::make_unique;
@@ -20,16 +20,6 @@ Service::Service()
 			std::move(make_unique<qrpc::RpcMethodHandler<Service, EchoRequestSample, EchoResponseSample>>(std::mem_fn(&Service::echoSample), this)),
 			EchoSampleTag
 	);
-}
-
-void Service::echo(EchoCharRequest *request, EchoCharResponse *response)
-{
-	response->setMsg(request->getMsg());
-}
-
-void Service::echoSample(EchoRequestSample *request, EchoResponseSample *response)
-{
-	response->setMsg(request->getMsg());
 }
 
 Stub::Stub(std::unique_ptr<qrpc::Connection> &&connection)

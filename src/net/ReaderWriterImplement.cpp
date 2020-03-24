@@ -2,10 +2,11 @@
 // Created by gaojian on 2019/12/20.
 //
 
-#include "impl/ReaderWriterImplement.h"
-#include "impl/ByteBuf.h"
+#include "net/ReaderWriterImplement.h"
+#include "net/ByteBuf.h"
+extern "C" {
 #include <sys/socket.h>
-
+}
 using std::make_shared;			using std::shared_ptr;
 
 namespace qrpc {

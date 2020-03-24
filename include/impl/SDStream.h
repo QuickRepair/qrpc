@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include "impl/ByteBuf.h"
+#include "net/ByteBuf.h"
 
 namespace qrpc {
 

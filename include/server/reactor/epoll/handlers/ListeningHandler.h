@@ -1,8 +1,8 @@
 #ifndef QRPC_REACTOR_LISTEN_HANDLER_H
 #define QRPC_REACTOR_LISTEN_HANDLER_H
 
-#include "include/server/reactor/EventHandler.h"
-#include "include/code_gen/Msg.h"
+#include "server/reactor/EventHandler.h"
+#include "impl/Msg.h"
 #include <string>
 #include <memory>
 

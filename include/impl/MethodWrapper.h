@@ -19,6 +19,7 @@ public:
 	virtual void run(void *request, void *response) const = 0;
 };
 
+/// @brief: Wrap rpc methods
 template<typename ServiceType, typename Request, typename Response>
 class RpcMethodHandler : public MethodHandler {
 public:

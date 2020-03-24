@@ -3,13 +3,13 @@
 //
 
 #include <cstring>
-#include "code_gen/MsgPackage.h"
-#include "impl/ByteBuf.h"
-#include "code_gen/Service.h"
-#include "code_gen/MethodWrapper.h"
-#include "impl/ReaderWriter.h"
-#include "code_gen/Msg.h"
-#include "code_gen/SDStream.h"
+#include "impl/MsgPackage.h"
+#include "net/ByteBuf.h"
+#include "impl/Service.h"
+#include "impl/MethodWrapper.h"
+#include "net/ReaderWriter.h"
+#include "impl/Msg.h"
+#include "impl/SDStream.h"
 
 using std::make_unique;				using std::optional;
 using std::nullopt;

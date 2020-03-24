@@ -6,8 +6,8 @@
 #define QRPC_CALL_H
 
 #include <memory>
-#include "include/impl/ByteBuf.h"
-#include "include/impl/ReaderWriter.h"
+#include "net/ByteBuf.h"
+#include "net/ReaderWriter.h"
 
 namespace qrpc {
 

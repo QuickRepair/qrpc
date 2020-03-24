@@ -13,6 +13,7 @@ class SerializeStream;
 class DeserializeStream;
 class MsgRepository;
 
+/// @brief Pack message
 class MsgPackage {
 public:
 	struct Request {

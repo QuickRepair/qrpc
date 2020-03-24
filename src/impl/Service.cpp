@@ -2,8 +2,8 @@
 // Created by gaojian on 2019/12/26.
 //
 
-#include "code_gen/Service.h"
-#include "code_gen/MethodWrapper.h"
+#include "impl/Service.h"
+#include "impl/MethodWrapper.h"
 
 namespace qrpc {
 Service::Service()
