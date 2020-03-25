@@ -38,5 +38,4 @@ namespace qrpc::CodeGen::Rule {
 	BOOST_SPIRIT_DEFINE(start, service, message, msg_attr)
 }
 
-
 #endif //QRPC_QRPCGRAMMAR_H

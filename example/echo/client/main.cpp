@@ -1,6 +1,6 @@
 #include "server/Server.h"
-#include "example/echo/msg/ServiceGen.h"
-#include "example/echo/msg/MsgGen.h"
+#include "test_message.h"
+#include "test_service.h"
 #include <iostream>
 #include <stdexcept>
 
@@ -17,19 +17,19 @@ int main()
 		for (char i = 0; i < 10; ++i)
 		{
 			EchoCharRequest request;
-			request.setMsg('0' + i);
+			request.set_varname('0' + i);
 			EchoCharResponse response;
 			stub.echo(&request, &response);
-			std::cout << response.getMsg() << std::endl;
+			std::cout << response.get_varname() << std::endl;
 		}
 
 		for (char i = 0; i < 100; ++i)
 		{
 			EchoRequestSample request;
-			request.setMsg("echo" + std::to_string(i));
+			request.set_varname("echo" + std::to_string(i));
 			EchoResponseSample response;
 			stub.echoSample(&request, &response);
-			std::cout << response.getMsg() << std::endl;
+			std::cout << response.get_varname() << std::endl;
 		}
 	}
 	catch (std::runtime_error &e)

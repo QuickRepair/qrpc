@@ -5,7 +5,11 @@
 #include "impl/code_gen/Visitor.h"
 #include "impl/code_gen/AST.hpp"
 #include "impl/code_gen/SymbolTable.hpp"
+#include "impl/code_gen/CodeGenTemplate.h"
+#include "impl/code_gen/TypeMap.h"
+#include "impl/code_gen/Stream.h"
 
+using std::make_shared;
 using qrpc::CodeGen::AST::Type;
 using namespace qrpc::CodeGen::ST;
 
@@ -83,8 +87,12 @@ void PrintVisitor::visitMessageAttr(qrpc::CodeGen::AST::MessageAttrDefAST &ast)
 	ostream << ast.type << "(" << ast.attrName << ") ";
 }
 
-CodeGenVisitor::CodeGenVisitor(std::ostream &os, std::ostream &messageOut)
-	: ostream{os}
+CodeGenVisitor::CodeGenVisitor(OutputStream &serviceHeader, OutputStream &serviceSource, OutputStream &messageHeader, OutputStream &messageSource)
+	: serviceHeaderOStream{serviceHeader}, serviceSourceOStream{serviceSource},
+	messageHeaderOStream{messageHeader}, messageSourceOStream{messageSource},
+	codeTemplate{make_shared<CodeTemplate::CPPCodeGen>()},
+	typeMap{make_shared<QRPCType::TypeMap>()},
+	serializeMap{make_shared<QRPCType::SerializeTypeMap>()}
 {}
 
 void CodeGenVisitor::visitContext(qrpc::CodeGen::AST::ASTContext &ast)
@@ -93,16 +101,29 @@ void CodeGenVisitor::visitContext(qrpc::CodeGen::AST::ASTContext &ast)
 		visitServiceAST(service);
 	for (auto &message : ast.messages)
 		visitMessageAST(message);
+	serviceHeaderOStream.getStream() << codeTemplate->getServiceHeader(messageHeaderOStream.getName());
+	serviceSourceOStream.getStream() << codeTemplate->getServiceSource(serviceHeaderOStream.getName());
+	messageHeaderOStream.getStream() << codeTemplate->getMessageHeader();
+	messageSourceOStream.getStream() << codeTemplate->getMessageSource(messageHeaderOStream.getName());
 }
 
 void CodeGenVisitor::visitServiceAST(qrpc::CodeGen::AST::ServiceAST &ast)
 {
+	codeTemplate->renderServiceHeader(ast.serviceName, ast.requestName, ast.responseName);
+	codeTemplate->renderServiceSource(ast.serviceName, ast.requestName, ast.responseName);
 }
 
 void CodeGenVisitor::visitMessageAST(qrpc::CodeGen::AST::MessageAST &ast)
 {
+	for (auto &attr : ast.def)
+		visitMessageAttr(attr);
+	codeTemplate->doneMessageClassHeaderRender(ast.messageName);
+	codeTemplate->doneMessageClassSourceRender(ast.messageName);
 }
+
 void CodeGenVisitor::visitMessageAttr(qrpc::CodeGen::AST::MessageAttrDefAST &ast)
 {
+	codeTemplate->renderMessageClassPropertyHeader(typeMap->get(ast.type), ast.attrName);
+	codeTemplate->renderMessageClassPropertySource(serializeMap->get(ast.type), ast.attrName);
 }
 }

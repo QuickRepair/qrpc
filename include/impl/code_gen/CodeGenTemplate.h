@@ -19,19 +19,20 @@ class CPPCodeGen : CodeGenTemplate {
 public:
 	void renderServiceHeader(const std::string &serviceName, const std::string &request, const std::string &response);
 	void renderServiceSource(const std::string &serviceName, const std::string &request, const std::string &response);
-	void renderMessageClassHeader(const std::string &type, const std::string &attrName);
+	void renderMessageClassPropertyHeader(const std::string &type, const std::string &attrName);
 	void doneMessageClassHeaderRender(const std::string &className);
-	void renderMessageClassSource(const std::string &type, const std::string &attrName);
+	void renderMessageClassPropertySource(const std::string &serializeClassName, const std::string &attrName);
 	void doneMessageClassSourceRender(const std::string &className);
-	std::string render();
+	std::string getServiceHeader(const std::string &messageHeaderFileName);
+	std::string getServiceSource(const std::string &serviceHeaderFileName);
+	std::string getMessageHeader();
+	std::string getMessageSource(const std::string &messageHeaderFileName);
 private:
 	// service *.h
-	std::string service_gen_h_include_message;
 	std::vector<std::string> service_gen_h_forward_decl;
 	std::vector<std::string> service_gen_h_service_rpc_method_decl;
 	std::vector<std::string> service_gen_h_client_rpc_method_decl;
 	// service *.cpp
-	std::string service_gen_cpp_include_service_h;
 	std::vector<std::string> service_gen_cpp_register_services_method;
 	std::vector<std::string> service_gen_cpp_stub_method;
 	// message *.h
@@ -39,7 +40,10 @@ private:
 	std::vector<std::string> message_gen_hpp_attr;
 	std::vector<std::string> message_gen_hpp_class_def;
 	// message *.cpp
-	std::string message_gen_cpp_include_message;
+	std::vector<std::string> message_gen_byte_size_def;
+	std::vector<std::string> message_gen_serialized_byte_size_def;
+	std::vector<std::string> message_gen_serialize_def;
+	std::vector<std::string> message_gen_deserialize_def;
 	std::vector<std::string> message_gen_method_def;
 };
 }

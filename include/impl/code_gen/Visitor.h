@@ -6,6 +6,7 @@
 #define QGEN_VISITOR_H
 
 #include <ostream>
+#include <memory>
 
 namespace qrpc::CodeGen::AST {
 class ASTContext;
@@ -15,6 +16,16 @@ class MessageAttrDefAST;
 }
 namespace qrpc::CodeGen::ST {
 class SymbolTable;
+}
+namespace qrpc::CodeGen::CodeTemplate {
+class CPPCodeGen;
+}
+namespace qrpc::CodeGen::QRPCType {
+class TypeMap;
+class SerializeTypeMap;
+}
+namespace qrpc::CodeGen {
+class OutputStream;
 }
 
 namespace qrpc::CodeGen::Visitor {
@@ -41,7 +52,7 @@ private:
 
 class PrintVisitor : Visitor {
 public:
-	PrintVisitor(std::ostream &os);
+	explicit PrintVisitor(std::ostream &os);
 	void visitContext(qrpc::CodeGen::AST::ASTContext &ast) override;
 	void visitServiceAST(qrpc::CodeGen::AST::ServiceAST &ast) override;
 	void visitMessageAST(qrpc::CodeGen::AST::MessageAST &ast) override;
@@ -53,14 +64,20 @@ private:
 
 class CodeGenVisitor : Visitor {
 public:
-	CodeGenVisitor(std::ostream &serviceOut, std::ostream &messageOut);
+	CodeGenVisitor(OutputStream &serviceHeader, OutputStream &serviceSource, OutputStream &messageHeader, OutputStream &messageSource);
 	void visitContext(qrpc::CodeGen::AST::ASTContext &ast) override;
 	void visitServiceAST(qrpc::CodeGen::AST::ServiceAST &ast) override;
 	void visitMessageAST(qrpc::CodeGen::AST::MessageAST &ast) override;
 	void visitMessageAttr(qrpc::CodeGen::AST::MessageAttrDefAST &ast) override;
 
 private:
-	std::ostream &ostream;
+	OutputStream &serviceHeaderOStream;
+	OutputStream &serviceSourceOStream;
+	OutputStream &messageHeaderOStream;
+	OutputStream &messageSourceOStream;
+	std::shared_ptr<CodeTemplate::CPPCodeGen> codeTemplate;
+	std::shared_ptr<QRPCType::TypeMap> typeMap;
+	std::shared_ptr<QRPCType::SerializeTypeMap> serializeMap;
 };
 }
 
